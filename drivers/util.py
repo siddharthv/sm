@@ -67,7 +67,7 @@ class CommandException(SMException):
         self.code = code
         self.cmd = cmd
         self.reason = reason
-        Exception.__init__(self, code)
+        Exception.__init__(self, os.strerror(abs(code)))
 
 class SRBusyException(SMException):
     """The SR could not be locked"""
@@ -1069,7 +1069,7 @@ if __debug__:
     except NameError:
         XE_IOFI_IORETRY = os.environ.get('XE_IOFI_IORETRY', None)
     if __name__ == 'util' and XE_IOFI_IORETRY is not None:
-        import iofi
+        __import__('iofi')
 
 
 ################################################################################
