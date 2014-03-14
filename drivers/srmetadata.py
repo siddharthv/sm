@@ -74,34 +74,41 @@ METADATA_OBJECT_TYPE_VDI = 'vdi'
 
 # ----------------- # General helper functions - begin # -----------------
 def get_min_blk_size_wrapper(fd):
+    """Remove XSLIB Dependency 
     result = get_min_blk_size(fd)
     if result.result == -1:
         raise "Failed to get minimum block size for the metadata file. "\
             "Error: %s" % os.strerror(result.err) 
     else:
         return result.result
+    """
+    return 512
     
 def open_file(path, write = False): 
     if write:
-        result = open_file_for_write(path)
-        if result.result == -1:
-            raise IOError("Failed to open file %s for write. Error: %s" % \
-                          (path, os.strerror(result.err)))
-    else:
-        result = open_file_for_read(path)
-        if result.result == -1:
+        try:
+            file_p = os.open(path, os.O_DIRECT | os.O_RDWR )
+        except IOError:
             raise IOError("Failed to open file %s for read. Error: %s" % \
                           (path, os.strerror(result.err)))
-
-    return result.result
+    else:
+        try:
+            file_p = os.open(path, os.O_DIRECT | os.O_RD)
+        except IOError:
+            raise IOError("Failed to open file %s for read. Error: %s" % \
+                          (path, os.strerror(result.err)))
+    return file_p
 
 def xs_file_write_wrapper(fd, offset, blocksize, data, length):
-    result = xs_file_write(fd, offset, blocksize, data, length)
-    if result.result == -1:
+    try:
+        fd.seek(offset)
+        result = fd.write(data)
+#        result = xs_file_write(fd, offset, blocksize, data, length)
+    except IOError:
         raise IOError("Failed to write file with params %s. Error: %s" % \
                           ([fd, offset, blocksize, data, length], \
                             os.strerror(result.err)))
-    return result.result
+    return result
 
 def xs_file_read_wrapper(fd, offset, bytesToRead, min_block_size):
     result = xs_file_read(fd, offset, bytesToRead, min_block_size)
@@ -122,7 +129,7 @@ def xs_file_read_wrapper(fd, offset, bytesToRead, min_block_size):
         
 def close(fd):
     if fd != -1:
-        close_file(fd)
+        fd.close()
 
 # get a range which is block aligned, contains 'offset' and allows
 # length bytes to be written
