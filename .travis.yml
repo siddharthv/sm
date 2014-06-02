@@ -15,7 +15,7 @@ script:
      - "python --version"
      - "cd drivers; nosetests --with-coverage -c ../.noserc ../tests/test_*.py"
      - "which python2.4"
-     - "which nosetests"
-     - "cd drivers; python2.4 /home/travis/virtualenv/python2.6.9/bin/nosetests --with-coverage -c ../.noserc ../tests/test_*.py"
+     - "ns=$(which nosetests)"
+     - "python2.4 $ns --with-coverage -c ../.noserc ../tests/test_*.py"
 after_success:
      coveralls
