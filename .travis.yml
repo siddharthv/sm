@@ -7,6 +7,7 @@ before_install:
      - "sudo add-apt-repository ppa:fkrull/deadsnakes -y"
      - "sudo apt-get update -qq"
      - "sudo apt-get install -qq python2.4 python2.4-dev"
+     - "sudo ln -sf /usr/bin/python2.4 /usr/bin/python" 
 install:
      - "pip install -r requirements.txt --use-mirrors"
 # command to run tests
@@ -15,6 +16,6 @@ script:
      - "cd drivers; nosetests --with-coverage -c ../.noserc ../tests/test_*.py"
      - "which python2.4"
      - "which nosetests"
-     - "cd drivers; python2.4 /usr/bin/nosetests --with-coverage -c ../.noserc ../tests/test_*.py"
+     - "cd drivers; python2.4 /home/travis/virtualenv/python2.6.9/bin/nosetests --with-coverage -c ../.noserc ../tests/test_*.py"
 after_success:
      coveralls
