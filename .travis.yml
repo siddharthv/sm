@@ -16,6 +16,6 @@ script:
      - "cd drivers; nosetests --with-coverage -c ../.noserc ../tests/test_*.py"
      - "which python2.4"
      - "ns=$(which nosetests); echo $ns"
-     - "python2.4 nosetests --with-coverage -c ../.noserc ../tests/test_*.py"
+     - "ns=$(which nosetests); python2.4 $ns --with-coverage -c ../.noserc ../tests/test_*.py"
 after_success:
      coveralls
