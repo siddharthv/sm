@@ -1,4 +1,3 @@
-pylint
 mock
 xenapi
 coveralls
