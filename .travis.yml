@@ -11,6 +11,9 @@ install:
      - "pip install -r requirements.txt --use-mirrors"
 # command to run tests
 script:
+     - "python --version"
      - "cd drivers; nosetests --with-coverage -c ../.noserc ../tests/test_*.py"
+     - "which python2.4"
+     - "cd drivers; python2.4 nosetests --with-coverage -c ../.noserc ../tests/test_*.py"
 after_success:
      coveralls
