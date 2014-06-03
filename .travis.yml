@@ -7,6 +7,9 @@ install:
      - "pip install -r requirements.txt --use-mirrors"
 # command to run tests
 script:
+     - "pylint --version"
+     - "PYTHONPATH=./snapwatchd:./drivers:$$PYTHONPATH pylint --rcfile=tests/pylintrc ./drivers/*.py"
+     = "PYTHONPATH=./snapwatchd:./drivers pylint --rcfile=tests/pylintrc ./drivers/*.py
      - "cd drivers; nosetests --with-coverage -c ../.noserc ../tests/test_*.py"
 after_success:
      coveralls
