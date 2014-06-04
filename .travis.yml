@@ -6,16 +6,19 @@ python:
 before_install:
      - "sudo add-apt-repository ppa:fkrull/deadsnakes -y"
      - "sudo apt-get update -qq"
-     - "sudo apt-get install -qq python2.4 python2.4-dev"
+     - "sudo apt-get -qy install python2.4-dev python-distribute-deadsnakes"
      - "sudo ln -sf /usr/bin/python2.4 /usr/bin/python" 
 install:
      - "pip install -r requirements.txt --use-mirrors"
+     - "easy_install-2.4 virtualenv==1.7.2"
 # command to run tests
 script:
+     - "pylint --version"
+     - "PYTHONPATH=./snapwatchd:./drivers pylint --rcfile=tests/pylintrc ./drivers/*.py"
      - "python --version"
      - "cd drivers; nosetests --with-coverage -c ../.noserc ../tests/test_*.py"
-     - "which python2.4"
+     - "py=$(which python); py24=(which python2.4); echo $py, $py24"
      - "ns=$(which nosetests); echo $ns"
-     - "ns=$(which nosetests); python2.4 $ns --with-coverage -c ../.noserc ../tests/test_*.py"
+     - "nosetests --with-coverage -c ../.noserc ../tests/test_*.py"
 after_success:
      coveralls
