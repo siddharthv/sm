@@ -17,7 +17,7 @@
 #
 # Utility functions to query and list local physical block devices from /sys
 
-import os, os.path, sys, time
+import os, os.path, sys, time, stat
 
 def read_whole_file(filename):
     f = open(filename, 'r')
