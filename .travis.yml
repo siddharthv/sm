@@ -10,7 +10,6 @@ before_install:
      - "sudo ln -sf /usr/bin/python2.4 /usr/bin/python" 
 install:
      - "pip install -r requirements.txt --use-mirrors"
-     - "easy_install-2.4 virtualenv==1.7.2"
 # command to run tests
 script:
      - "pylint --version"
