@@ -1251,7 +1251,7 @@ class VDI(object):
                 util.SMlog('Attempt to register tapdisk with RRDD as a plugin.')
                 pluginName = "tap-" + str(tapdisk.pid) + "-" + str(tapdisk.minor)
                 proxy = ServerProxy('http://' + SOCKPATH, transport=UnixStreamTransport())
-                proxy.Plugin.register({'uid': pluginName, 'frequency': 'Five_seconds'})
+                proxy.Plugin.register({'uid': pluginName, 'frequency': 'Five_Seconds'})
             except Exception, e:
                 util.SMlog('ERROR: Failed to register tapdisk with RRDD due to %s' % e)
         else:
