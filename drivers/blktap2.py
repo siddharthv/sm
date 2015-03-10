@@ -991,9 +991,19 @@ class VDI(object):
                 return self.__o_direct
             if (self.target.vdi.sr.handles("nfs") or
                 self.target.vdi.sr.handles("ext")):
-                from FileSR import FileVDI
-                if vhdutil.getParent(self.target.vdi.path, FileVDI.extractUuid):
+                vdi_ref = self.target.vdi.sr.srcmd.params.get('vdi_ref')
+                # Check if VDI is read-only
+                if self._session.xenapi.VDI.get_read_only(vdi_ref):
                     self.__o_direct = False
+                else:
+                    # Handle RAW and VHD independently for non-RO VDIs
+                    if self.target.vdi.path.endswith(vhdutil.FILE_EXTN_RAW):
+                        self.__o_direct = True
+                    elif self.target.vdi.path.endswith(vhdutil.FILE_EXTN_VHD):
+                        from FileSR import FileVDI
+                        if vhdutil.getParent(self.target.vdi.path, FileVDI.extractUuid):
+                            self.__o_direct = False
+
 
         if self.__o_direct is None:
             self.__o_direct = True
