@@ -75,7 +75,7 @@ class NFSSR(FileSR.FileSR):
         self.driver_config = DRIVER_CONFIG
         if not self.dconf.has_key('server'):
             raise xs_errors.XenError('ConfigServerMissing')
-        self.remoteserver = self.dconf['server']
+        self.remoteserver = util._testHost(self.dconf['server'], NFSPORT, 'NFSTarget')
         self.nosubdir = False
         if self.sr_ref and self.session is not None :
             self.sm_config = self.session.xenapi.SR.get_sm_config(self.sr_ref)
@@ -91,7 +91,7 @@ class NFSSR(FileSR.FileSR):
         self.transport = DEFAULT_TRANSPORT
         if self.dconf.has_key('useUDP') and self.dconf['useUDP'] == 'true':
             self.transport = "udp"
-        self.nfsversion = nfs.validate_nfsversion(self.dconf.get('nfsversion'))
+        self.nfsversion = nfs.get_valid_nfsversion(self.remoteserver, self.dconf.get('nfsversion'))
 
         self._check_o_direct()
 

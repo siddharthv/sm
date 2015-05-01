@@ -46,7 +46,8 @@ SOFTMOUNT_RETRANS = 0x7fffffff
 RPCINFO_BIN = "/usr/sbin/rpcinfo"
 SHOWMOUNT_BIN = "/usr/sbin/showmount"
 
-DEFAULT_NFSVERSION = '3'
+DEFAULT_NFSVERSION = '4'
+FALLBACK_NFSVERSION = '3'
 
 NFS_VERSION = [
     'nfsversion', 'for type=nfs, NFS protocol version - 3, 4']
@@ -218,3 +219,29 @@ def get_supported_nfs_versions(server):
         return supported_versions
     except:
         util.SMlog("Unable to obtain list of valid nfs versions")
+
+
+def get_valid_nfsversion(server, nfsversion):
+    """Validate nfsverion on server and return a valid identifier"""
+    nfs_sv = DEFAULT_NFSVERSION
+    supported_versions = get_supported_nfs_versions(server)
+    if not nfsversion:
+        if DEFAULT_NFSVERSION in supported_versions:
+            nfs_sv = DEFAULT_NFSVERSION
+        elif FALLBACK_NFSVERSION in supported_versions:
+            nfs_sv = FALLBACK_NFSVERSION
+        else:
+            raise NfsException("No supported version.")
+    else:
+        if nfsversion in supported_versions:
+            return nfsversion
+        elif nfsversion == DEFAULT_NFSVERSION and nfsversion not in supported_versions:
+            if FALLBACK_NFSVERSION in supported_versions:
+                nfs_sv = FALLBACK_NFSVERSION
+        elif nfsversion == FALLBACK_NFSVERSION and nfsversion not in supported_versions:
+            if DEFAULT_NFSVERSION in supported_versions:
+                nfs_sv = DEFAULT_NFSVERSION
+        else:
+            util.SMlog("Should never reach here.")
+
+    return nfs_sv
