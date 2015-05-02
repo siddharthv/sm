@@ -75,7 +75,7 @@ class NFSSR(FileSR.FileSR):
         self.driver_config = DRIVER_CONFIG
         if not self.dconf.has_key('server'):
             raise xs_errors.XenError('ConfigServerMissing')
-        self.remoteserver = util._testHost(self.dconf['server'], NFSPORT, 'NFSTarget')
+        self.remoteserver = self.dconf['server']
         self.nosubdir = False
         if self.sr_ref and self.session is not None :
             self.sm_config = self.session.xenapi.SR.get_sm_config(self.sr_ref)

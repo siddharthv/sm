@@ -223,6 +223,8 @@ def get_supported_nfs_versions(server):
 
 def get_valid_nfsversion(server, nfsversion):
     """Validate nfsverion on server and return a valid identifier"""
+    from NFSSR import NFSPORT
+    util._testHost(server, NFSPORT, 'NFSTarget')
     nfs_sv = DEFAULT_NFSVERSION
     supported_versions = get_supported_nfs_versions(server)
     if not nfsversion:
